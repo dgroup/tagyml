@@ -26,5 +26,7 @@
  * Unit tests for the package {@link org.dgroup.yaml}.
  *
  * @since 0.1.0
+ * @todo #/DEV Migrate unit tests to Assertion from cactoos-matchers once v0.13
+ *  is released.
  */
 package org.dgroup.yaml;

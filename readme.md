@@ -100,7 +100,7 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         String email();
     }
     ```
-    See [YamlFormatException](/src/main/java/org/dgroup/yaml/YamlFormatException.java) and [UncheckedYamlFormatException](/src/main/java/org/dgroup/yaml/UncheckedYamlFormatException.java) in case if you don't wan't to throw the checked exception during YAML file parsing procedure.
+    See [UncheckedYamlFormatException](/src/main/java/org/dgroup/yaml/UncheckedYamlFormatException.java) in case if you don't wan't to throw the checked exception during YAML file parsing procedure.
  3. Define YAML parsing process based on YAML file version tag
     ```java
     public class Teams implements Scalar<Iterable<Team>> {

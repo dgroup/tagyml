@@ -134,6 +134,7 @@
   </dependencies>
   <build>
     <plugins>
+      <!-- @todo Activate de.thetaphi:forbiddenapis in order to forbid the usage of forbidden API like static matchers, etc -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
