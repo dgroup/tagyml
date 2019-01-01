@@ -1,0 +1,23 @@
+version: 1.0
+
+teams:
+
+  - id: 100
+    name:     BSS dream team
+    lead:
+      id:     boma14
+      name:   Bob Marley
+      email:  bob.marley@dreamteam.com
+    properties:
+      total-devs: 5
+      total-managers: 10
+
+  - id: 200
+    name:     OSS dream team
+    lead:
+      id:     juve12
+      name:   Jules Verne
+      email:  jules.verne@dreamteam.com
+    properties:
+      total-devs: 5
+      total-managers: 5

@@ -1,0 +1,9 @@
+version: 1.0
+
+teams:
+
+  - id: 1bc
+    name:     BSS dream team
+
+  - id: 200
+    name:     OSS dream team
