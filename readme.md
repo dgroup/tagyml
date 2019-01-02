@@ -118,10 +118,12 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         public Iterable<Team> value() throws YamlFormatException {
             try {
                 return new FirstIn<>(
-                    () -> new TeamsV1(this.path, this.charset).value(),
-                    () -> new TeamsV2(this.path, this.charset).value(),
-                    ...
-                    () -> new TeamsVn(this.path, this.charset).value(),
+                    new IterableOf<>(
+                        new TeamsV1(this.path, this.charset).value(),
+                        new TeamsV2(this.path, this.charset).value(),
+                        ...
+                        new TeamsVn(this.path, this.charset).value()
+                    ),
                     () -> {
                         throw new YmlFormatException(
                             "The file %s has unsupported YAML format",
@@ -129,7 +131,7 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
                         );
                     }
                 ).value();
-            } catch (final IOException | UncheckedIOException cause) {
+            } catch (final Exception cause) {
                 throw new YamlFormatException(cause);
             }
         }
