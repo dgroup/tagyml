@@ -21,10 +21,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package io.github.dgroup.yaml.scalar;
+package io.github.dgroup.yaml.format;
 
 import io.github.dgroup.yaml.YamlFormatException;
-import org.cactoos.iterable.IterableOf;
+import org.cactoos.Scalar;
+import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public final class FirstInTest {
     public void value() {
         MatcherAssert.assertThat(
             new FirstIn<>(
-                () -> {
+                (Scalar<Integer>) () -> {
                     throw new IllegalArgumentException("1");
                 },
                 () -> {
@@ -67,18 +68,12 @@ public final class FirstInTest {
         this.exception.expect(YamlFormatException.class);
         this.exception.expectMessage("The file has unsupported format");
         new FirstIn<>(
-            new IterableOf<>(
-                () -> {
-                    throw new IllegalArgumentException("Can't parse version 1");
-                },
-                () -> {
-                    throw new IllegalArgumentException("Can't parse version 2");
-                }
-            ),
+            new TextOf("The file has unsupported format"),
             () -> {
-                throw new YamlFormatException(
-                    "The file has unsupported format"
-                );
+                throw new IllegalArgumentException("Can't parse version 1");
+            },
+            () -> {
+                throw new IllegalArgumentException("Can't parse version 2");
             }
         ).value();
     }

@@ -21,10 +21,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package io.github.dgroup.yaml.scalar;
+package io.github.dgroup.yaml.format;
 
-import java.util.NoSuchElementException;
+import io.github.dgroup.yaml.YamlFormatException;
 import org.cactoos.Scalar;
+import org.cactoos.Text;
 import org.cactoos.iterable.IterableOf;
 
 /**
@@ -37,50 +38,47 @@ import org.cactoos.iterable.IterableOf;
 public final class FirstIn<T> implements Scalar<T> {
 
     /**
-     * Origin.
+     * The error message in case of illegal YAML format.
      */
-    private final Scalar<T> slr;
+    private final Text error;
+
+    /**
+     * The supported formats.
+     */
+    private final Iterable<Scalar<T>> formats;
 
     /**
      * Ctor.
-     * @param slrs The scalars to be executed.
+     * @param formats The formats to be applied to YAML file in order to parse.
      */
     @SafeVarargs
-    public FirstIn(final Scalar<T>... slrs) {
-        this(
-            new IterableOf<>(slrs),
-            () -> {
-                throw new NoSuchElementException(
-                    "No scalar(s) which gives the target object"
-                );
-            }
-        );
+    public FirstIn(final Scalar<T>... formats) {
+        this(() -> "The file has unsupported YAML format", formats);
     }
 
     /**
      * Ctor.
-     * @param slrs The scalars to be executed.
-     * @param alter The alternative in case if no scalars (without exceptions)
-     *  found.
-     * @checkstyle ReturnCountCheck (20 lines)
+     * @param formats The formats to be applied to YAML file in order to parse.
+     * @param error The exception message in case if there are no any scalars
+     *  which able to parse the target YAML file.
      * @checkstyle IllegalCatchCheck (15 lines)
      */
-    @SuppressWarnings({
-        "PMD.EmptyCatchBlock", "PMD.AvoidCatchingGenericException"})
-    public FirstIn(final Iterable<Scalar<T>> slrs, final Scalar<T> alter) {
-        this.slr = () -> {
-            for (final Scalar<T> scalar : slrs) {
-                try {
-                    return scalar.value();
-                } catch (final Exception exp) {
-                }
-            }
-            return alter.value();
-        };
+    @SafeVarargs
+    public FirstIn(final Text error, final Scalar<T>... formats) {
+        this.formats = new IterableOf<>(formats);
+        this.error = error;
     }
 
     @Override
-    public T value() throws Exception {
-        return this.slr.value();
+    @SuppressWarnings({
+        "PMD.EmptyCatchBlock", "PMD.AvoidCatchingGenericException"})
+    public T value() throws YamlFormatException {
+        for (final Scalar<T> format : this.formats) {
+            try {
+                return format.value();
+            } catch (final Exception exp) {
+            }
+        }
+        throw new YamlFormatException(this.error);
     }
 }

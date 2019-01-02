@@ -100,7 +100,7 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         String email();
     }
     ```
-    See [UncheckedYamlFormatException](/src/main/java/org/dgroup/yaml/UncheckedYamlFormatException.java) in case if you don't wan't to throw the checked exception during YAML file parsing procedure.
+    See [UncheckedYamlFormatException](/src/main/java/io/github/dgroup/yaml/UncheckedYamlFormatException.java) in case if you don't wan't to throw the checked exception during YAML file parsing procedure.
  3. Define YAML parsing process based on YAML file version tag
     ```java
     public class Teams implements Scalar<Iterable<Team>> {
@@ -116,28 +116,19 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         
         @Override
         public Iterable<Team> value() throws YamlFormatException {
-            try {
-                return new FirstIn<>(
-                    new IterableOf<>(
-                        new TeamsV1(this.path, this.charset).value(),
-                        new TeamsV2(this.path, this.charset).value(),
-                        ...
-                        new TeamsVn(this.path, this.charset).value()
-                    ),
-                    () -> {
-                        throw new YmlFormatException(
-                            "The file %s has unsupported YAML format",
-                            this.path
-                        );
-                    }
-                ).value();
-            } catch (final Exception cause) {
-                throw new YamlFormatException(cause);
-            }
+            return new FirstIn<>(
+                new FormattedText(
+                    "The file %s has unsupported YAML format", this.path
+                ),
+                () -> new TeamsV1(this.path, this.charset).value(),
+                () -> new TeamsV2(this.path, this.charset).value(),
+                ...
+                () -> new TeamsVn(this.path, this.charset).value()
+            ).value();
         }
     }
     ```
-    See [FirstIn](/src/main/java/org/dgroup/yaml/scalar/FirstIn.java).
+    See [FirstIn](/src/main/java/io/github/dgroup/yaml/text/FirstIn.java).
  4. Define YAML format for version 1.0 - `TeamsV1`
     ```java
     final class TeamsV1 implements Scalar<Iterable<Team>> {
@@ -237,7 +228,7 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
     
     }
     ```
-    See [YamlFileOf](/src/main/java/org/dgroup/yaml/file/YamlFileOf.java), [TgVersion](/src/main/java/org/dgroup/yaml/tag/TgVersion.java), [TagOf](/src/main/java/org/dgroup/yaml/tag/TagOf.java) and [TgUnchecked](/src/main/java/org/dgroup/yaml/tag/TgUnchecked.java).
+    See [YamlFileOf](/src/main/java/io/github/dgroup/yaml/file/YamlFileOf.java), [TgVersion](/src/main/java/io/github/dgroup/yaml/tag/TgVersion.java), [TagOf](/src/main/java/io/github/dgroup/yaml/tag/TagOf.java) and [TgUnchecked](/src/main/java/io/github/dgroup/yaml/tag/TgUnchecked.java).
  5. Parse YAML file in [EO](http://www.elegantobjects.org/#principles) way
     ```java
     @Test
@@ -260,5 +251,5 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         );
     }
     ```
-    See [YamlFileOfTest](/src/test/java/org/dgroup/yaml/YamlFileOfTest.java) for details.
+    See [YamlFileOfTest](/src/test/java/io/github/dgroup/yaml/YamlFileOfTest.java) for details.
     Of course, the test above is testing a lot of things and should be separated into more tests with single `MatcherAssert.assertThat` each, but here it was done for educational purposes.

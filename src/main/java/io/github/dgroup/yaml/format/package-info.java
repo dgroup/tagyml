@@ -23,8 +23,8 @@
  */
 
 /**
- * Scalars.
+ * The classes dedicated to work with YAML file format(s).
  *
  * @since 0.1.0
  */
-package io.github.dgroup.yaml.scalar;
+package io.github.dgroup.yaml.format;
