@@ -121,7 +121,13 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
                     () -> new TeamsV1(this.path, this.charset).value(),
                     () -> new TeamsV2(this.path, this.charset).value(),
                     ...
-                    () -> new TeamsVn(this.path, this.charset).value()
+                    () -> new TeamsVn(this.path, this.charset).value(),
+                    () -> {
+                        throw new YmlFormatException(
+                            "The file %s has unsupported YAML format",
+                            this.path
+                        );
+                    }
                 ).value();
             } catch (final IOException | UncheckedIOException cause) {
                 throw new YamlFormatException(cause);
