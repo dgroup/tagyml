@@ -1,5 +1,5 @@
-[![Maven](https://img.shields.io/maven-central/v/org.dgroup/tagyml.svg)](https://mvnrepository.com/artifact/org.dgroup/tagyml)
-[![Javadocs](http://www.javadoc.io/badge/org.dgroup/tagyml.svg)](http://www.javadoc.io/doc/org.dgroup/tagyml)
+[![Maven](https://img.shields.io/maven-central/v/io.github.dgroup/tagyml.svg)](https://mvnrepository.com/artifact/io.github.dgroup/tagyml)
+[![Javadocs](http://www.javadoc.io/badge/io.github.dgroup/tagyml.svg)](http://www.javadoc.io/doc/io.github.dgroup/tagyml)
 [![License: MIT](https://img.shields.io/github/license/mashape/apistatus.svg)](./license.txt)
 [![Commit activity](https://img.shields.io/github/commit-activity/y/dgroup/tagyml.svg?style=flat-square)](https://github.com/dgroup/tagyml/graphs/commit-activity)
 
@@ -25,14 +25,14 @@ until we release version 1.0.
 Maven:
 ```xml
 <dependency>
-    <groupId>org.dgroup</groupId>
+    <groupId>io.github.dgroup</groupId>
     <artifactId>tagyml</artifactId>
 </dependency>
 ```
 Gradle:
 ```groovy
 dependencies {
-    compile 'org.dgroup:tagyml:<version>'
+    compile 'io.github.dgroup:tagyml:<version>'
 }
 ```
 The current project version is built on top of https://bitbucket.org/asomov/snakeyaml framework.
