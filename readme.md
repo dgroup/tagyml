@@ -249,7 +249,7 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
     
     }
     ```
-    See [Format](/src/main/java/io/github/dgroup/Format.java), [YamlFileOf](/src/main/java/io/github/dgroup/yaml/file/YamlFileOf.java), [TgVersion](/src/main/java/io/github/dgroup/yaml/tag/TgVersion.java), [TagOf](/src/main/java/io/github/dgroup/yaml/tag/TagOf.java) and [TgUnchecked](/src/main/java/io/github/dgroup/yaml/tag/TgUnchecked.java).
+    See [Format](/src/main/java/io/github/dgroup/yaml/Format.java), [YamlFileOf](/src/main/java/io/github/dgroup/yaml/file/YamlFileOf.java), [TgVersion](/src/main/java/io/github/dgroup/yaml/tag/TgVersion.java), [TagOf](/src/main/java/io/github/dgroup/yaml/tag/TagOf.java) and [TgUnchecked](/src/main/java/io/github/dgroup/yaml/tag/TgUnchecked.java).
  5. Parse YAML file in [EO](http://www.elegantobjects.org/#principles) way
     ```java
     @Test
