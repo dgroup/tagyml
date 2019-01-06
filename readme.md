@@ -104,7 +104,9 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
  3. Define YAML parsing process based on YAML file version tag
     ```java
     public class Teams implements Scalar<Iterable<Team>> {
-        
+
+        private static final Logger LOG = LoggerFactory.getLogger(Teams.class);
+
         /**
          * @param path The path to YAML file with configuration.
          * @param charset The YAML file charset to read.
@@ -117,13 +119,16 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         @Override
         public Iterable<Team> value() throws YamlFormatException {
             return new FirstIn<>(
+                exception -> LOG.warn(
+                    "Unable to parse, skipping format", exception
+                ),
                 new FormattedText(
                     "The file %s has unsupported YAML format", this.path
                 ),
-                () -> new TeamsV1(this.path, this.charset).value(),
-                () -> new TeamsV2(this.path, this.charset).value(),
+                new TeamsV1(this.path, this.charset),
+                new TeamsV2(this.path, this.charset),
                 ...
-                () -> new TeamsVn(this.path, this.charset).value()
+                new TeamsVn(this.path, this.charset)
             ).value();
         }
     }
