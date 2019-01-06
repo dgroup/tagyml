@@ -24,33 +24,47 @@
 package io.github.dgroup.yaml.format;
 
 import io.github.dgroup.yaml.YamlFormatException;
+import java.util.Collection;
+import java.util.LinkedList;
 import org.cactoos.Scalar;
+import org.cactoos.Text;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.StringContains;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.llorllale.cactoos.matchers.ScalarHasValue;
+import org.llorllale.cactoos.matchers.TextHasString;
 
 /**
  * Test case for {@link FirstIn}.
  *
  * @since 0.1.0
- * @checkstyle MagicNumberCheck (500 lines)
- * @checkstyle JavadocMethodCheck (500 lines)
- * @checkstyle JavadocVariableCheck (500 lines)
+ * @checkstyle MagicNumberCheck (200 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class FirstInTest {
 
+    /**
+     * The junit rule to catch and verify the exceptions within the tests.
+     */
     @Rule
-    public ExpectedException exception = ExpectedException.none();
+    public ExpectedException caused = ExpectedException.none();
 
+    /**
+     * The '3' number represent the object which was parsed by the first
+     * supported format.
+     */
     @Test
-    public void value() {
+    public void matched() {
         MatcherAssert.assertThat(
-            new FirstIn<>(
-                (Scalar<Integer>) () -> {
+            "The 3rd object was 'parsed', has value '3' and returned for usage",
+            new FirstIn<Integer>(
+                exception -> {
+                },
+                () -> "Ok",
+                (Scalar) () -> {
                     throw new IllegalArgumentException("1");
                 },
                 () -> {
@@ -63,12 +77,22 @@ public final class FirstInTest {
         );
     }
 
+    /**
+     * Check the default error message to be thrown in case no any formats which
+     * support the YAML file structure.
+     *
+     * @throws YamlFormatException Usually thrown in case if YAML file has
+     *  unsupported/illegal format. In the current case it will be catch by
+     *  {@link this#caused}.
+     */
     @Test
-    public void alternative() throws Exception {
-        this.exception.expect(YamlFormatException.class);
-        this.exception.expectMessage("The file has unsupported format");
+    public void failed() throws YamlFormatException {
+        this.caused.expect(YamlFormatException.class);
+        this.caused.expectMessage("The file has unsupported YAML format");
         new FirstIn<>(
-            new TextOf("The file has unsupported format"),
+            exception -> {
+            },
+            new TextOf("The file has unsupported YAML format"),
             () -> {
                 throw new IllegalArgumentException("Can't parse version 1");
             },
@@ -76,5 +100,33 @@ public final class FirstInTest {
                 throw new IllegalArgumentException("Can't parse version 2");
             }
         ).value();
+    }
+
+    /**
+     * The fallback procedure, for example to log the exception.
+     */
+    @Test
+    public void fallback() {
+        final Collection<Text> fllback = new LinkedList<>();
+        try {
+            new FirstIn<>(
+                exception -> fllback.add(new TextOf(exception)),
+                () -> "The YAML file 'abc.yml' has unsupported format",
+                (Scalar<Text>) () -> {
+                    throw new YamlFormatException("NPE");
+                }
+            ).value();
+        } catch (final YamlFormatException cause) {
+            MatcherAssert.assertThat(
+                cause.getMessage(),
+                new StringContains(
+                    "The YAML file 'abc.yml' has unsupported format"
+                )
+            );
+        }
+        MatcherAssert.assertThat(
+            fllback.iterator().next(),
+            new TextHasString("io.github.dgroup.yaml.YamlFormatException: NPE")
+        );
     }
 }
