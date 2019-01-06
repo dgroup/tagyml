@@ -133,7 +133,7 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         }
     }
     ```
-    See [FirstIn](/src/main/java/io/github/dgroup/yaml/text/FirstIn.java).
+    See [FirstIn](/src/main/java/io/github/dgroup/yaml/format/FirstIn.java).
  4. Define YAML format for version 1.0 - `TeamsV1`
     ```java
     final class TeamsV1 implements Scalar<Iterable<Team>> {
@@ -256,5 +256,5 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         );
     }
     ```
-    See [YamlFileOfTest](/src/test/java/io/github/dgroup/yaml/YamlFileOfTest.java) for details.
+    See [YamlFileOfTest](/src/test/java/io/github/dgroup/yaml/file/YamlFileOfTest.java) for details.
     Of course, the test above is testing a lot of things and should be separated into more tests with single `MatcherAssert.assertThat` each, but here it was done for educational purposes.
