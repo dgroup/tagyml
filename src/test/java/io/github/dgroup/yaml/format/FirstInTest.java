@@ -26,10 +26,11 @@ package io.github.dgroup.yaml.format;
 import io.github.dgroup.yaml.YamlFormatException;
 import java.util.Collection;
 import java.util.LinkedList;
-import org.cactoos.Scalar;
 import org.cactoos.Text;
+import org.cactoos.text.FormattedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.hamcrest.core.StringContains;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,6 +43,8 @@ import org.llorllale.cactoos.matchers.TextHasString;
  *
  * @since 0.1.0
  * @checkstyle MagicNumberCheck (200 lines)
+ * @checkstyle StringLiteralsConcatenationCheck (200 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (200 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class FirstInTest {
@@ -60,18 +63,24 @@ public final class FirstInTest {
     public void matched() {
         MatcherAssert.assertThat(
             "The 3rd object was 'parsed', has value '3' and returned for usage",
-            new FirstIn<Integer>(
-                exception -> {
+            new FirstIn<>(
+                (version, exception) -> {
                 },
                 () -> "Ok",
-                (Scalar) () -> {
-                    throw new IllegalArgumentException("1");
-                },
-                () -> {
-                    throw new IllegalArgumentException("2");
-                },
-                () -> 3,
-                () -> 4
+                new FormatOf<>(
+                    "1.0",
+                    () -> {
+                        throw new YamlFormatException("1");
+                    }
+                ),
+                new FormatOf<>(
+                    "2.0",
+                    () -> {
+                        throw new YamlFormatException("2");
+                    }
+                ),
+                new FormatOf<>("3.0", () -> 3),
+                new FormatOf<>("4.0", () -> 4)
             ),
             new ScalarHasValue<>(3)
         );
@@ -90,15 +99,21 @@ public final class FirstInTest {
         this.caused.expect(YamlFormatException.class);
         this.caused.expectMessage("The file has unsupported YAML format");
         new FirstIn<>(
-            exception -> {
+            (version, exception) -> {
             },
             new TextOf("The file has unsupported YAML format"),
-            () -> {
-                throw new IllegalArgumentException("Can't parse version 1");
-            },
-            () -> {
-                throw new IllegalArgumentException("Can't parse version 2");
-            }
+            new FormatOf<>(
+                "1.0",
+                () -> {
+                    throw new IllegalArgumentException("Can't parse version 1");
+                }
+            ),
+            new FormatOf<>(
+                "2.0",
+                () -> {
+                    throw new IllegalArgumentException("Can't parse version 2");
+                }
+            )
         ).value();
     }
 
@@ -110,11 +125,19 @@ public final class FirstInTest {
         final Collection<Text> fllback = new LinkedList<>();
         try {
             new FirstIn<>(
-                exception -> fllback.add(new TextOf(exception)),
+                (version, exception) -> fllback.add(
+                    new FormattedText(
+                        "version %s is failed due to %s",
+                        version, new TextOf(exception)
+                    )
+                ),
                 () -> "The YAML file 'abc.yml' has unsupported format",
-                (Scalar<Text>) () -> {
-                    throw new YamlFormatException("NPE");
-                }
+                new FormatOf<>(
+                    "1.0",
+                    () -> {
+                        throw new IllegalArgumentException("NPE");
+                    }
+                )
             ).value();
         } catch (final YamlFormatException cause) {
             MatcherAssert.assertThat(
@@ -126,7 +149,15 @@ public final class FirstInTest {
         }
         MatcherAssert.assertThat(
             fllback.iterator().next(),
-            new TextHasString("io.github.dgroup.yaml.YamlFormatException: NPE")
+            Matchers.allOf(
+                new TextHasString(
+                    "version 1.0 is failed due to "
+                        + "io.github.dgroup.yaml.YamlFormatException"
+                ),
+                new TextHasString(
+                    "Caused by: java.lang.IllegalArgumentException: NPE"
+                )
+            )
         );
     }
 }

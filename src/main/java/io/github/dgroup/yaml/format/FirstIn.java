@@ -23,11 +23,12 @@
  */
 package io.github.dgroup.yaml.format;
 
+import io.github.dgroup.yaml.Format;
 import io.github.dgroup.yaml.YamlFormatException;
-import org.cactoos.Proc;
+import org.cactoos.BiProc;
 import org.cactoos.Scalar;
 import org.cactoos.Text;
-import org.cactoos.func.UncheckedProc;
+import org.cactoos.func.UncheckedBiProc;
 import org.cactoos.iterable.IterableOf;
 
 /**
@@ -47,14 +48,15 @@ public final class FirstIn<T> implements Scalar<T> {
     /**
      * Ctor.
      * @param fbk The procedure to handle the exceptions within the
-     *  {@link Scalar#value()}.
+     *  {@link Format#value()}.
      * @param err The exception message in case if there are no any scalars
      *  which able to parse the target YAML file.
      * @param fts The formats to be applied to YAML file in order to parse.
      */
     @SafeVarargs
     public FirstIn(
-        final Proc<Exception> fbk, final Text err, final Scalar<T>... fts
+        final BiProc<String, Exception> fbk, final Text err,
+        final Format<T>... fts
     ) {
         this(fbk, err, new IterableOf<>(fts));
     }
@@ -62,7 +64,7 @@ public final class FirstIn<T> implements Scalar<T> {
     /**
      * Ctor.
      * @param fbk The procedure to handle the exceptions within the
-     *  {@link Scalar#value()}.
+     *  {@link Format#value()}.
      * @param err The exception message in case if there are no any scalars
      *  which able to parse the target YAML file.
      * @param fts The formats to be applied to YAML file in order to parse.
@@ -70,14 +72,15 @@ public final class FirstIn<T> implements Scalar<T> {
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public FirstIn(
-        final Proc<Exception> fbk, final Text err, final Iterable<Scalar<T>> fts
+        final BiProc<String, Exception> fbk, final Text err,
+        final Iterable<Format<T>> fts
     ) {
         this.origin = () -> {
-            for (final Scalar<T> format : fts) {
+            for (final Format<T> format : fts) {
                 try {
                     return format.value();
                 } catch (final Exception exp) {
-                    new UncheckedProc<>(fbk).exec(exp);
+                    new UncheckedBiProc<>(fbk).exec(format.version(), exp);
                 }
             }
             throw new YamlFormatException(err);

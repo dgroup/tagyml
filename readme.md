@@ -118,13 +118,24 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         
         @Override
         public Iterable<Team> value() throws YamlFormatException {
+            // Parse YAML file using first supported YAML format
             return new FirstIn<>(
-                exception -> LOG.warn(
-                    "Unable to parse, skipping format", exception
+                // Print to logs the details about failed attempt of
+                // parsing YAML file using a particular format.
+                // SLF4J has an ugly signature for 'warn' method.
+                (version, exception) -> LOG.warn(
+                    new FormattedText(
+                        "Unable to parse '%s' using '%s' format",
+                        this.path, version
+                    ).asString(),
+                    exception
                 ),
+                // The exception message in case if YAML file can't be
+                // parsed using any specified formats below
                 new FormattedText(
                     "The file %s has unsupported YAML format", this.path
                 ),
+                // The supported YAML formats
                 new TeamsV1(this.path, this.charset),
                 new TeamsV2(this.path, this.charset),
                 ...
@@ -136,7 +147,7 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
     See [FirstIn](/src/main/java/io/github/dgroup/yaml/format/FirstIn.java).
  4. Define YAML format for version 1.0 - `TeamsV1`
     ```java
-    final class TeamsV1 implements Scalar<Iterable<Team>> {
+    final class TeamsV1 implements Format<Iterable<Team>> {
     
         private final Path path;
         private final Charset charset;
@@ -145,11 +156,16 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
             this.path = path;
             this.charset = charset;
         }
-    
+
+        @Override
+        public String version() {
+            return "1.0";
+        }
+
         @Override
         public Iterable<Team> value() throws YamlFormatException {
             return new YamlFileOf(this.path, this.charset)
-                .read(1.0, YamlFile.class)
+                .read(this.version(), YamlFile.class)
                 .tagTeams();
         }
     
@@ -233,7 +249,7 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
     
     }
     ```
-    See [YamlFileOf](/src/main/java/io/github/dgroup/yaml/file/YamlFileOf.java), [TgVersion](/src/main/java/io/github/dgroup/yaml/tag/TgVersion.java), [TagOf](/src/main/java/io/github/dgroup/yaml/tag/TagOf.java) and [TgUnchecked](/src/main/java/io/github/dgroup/yaml/tag/TgUnchecked.java).
+    See [Format](/src/main/java/io/github/dgroup/Format.java), [YamlFileOf](/src/main/java/io/github/dgroup/yaml/file/YamlFileOf.java), [TgVersion](/src/main/java/io/github/dgroup/yaml/tag/TgVersion.java), [TagOf](/src/main/java/io/github/dgroup/yaml/tag/TagOf.java) and [TgUnchecked](/src/main/java/io/github/dgroup/yaml/tag/TgUnchecked.java).
  5. Parse YAML file in [EO](http://www.elegantobjects.org/#principles) way
     ```java
     @Test
@@ -247,7 +263,8 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         );
         MatcherAssert.assertThat(
             "The 1st team defined in YAML tag has id 100",
-            teams.iterator().next().id(), new IsEqual<>(100)
+            teams.iterator().next().id(),
+            new IsEqual<>(100)
         );
         MatcherAssert.assertThat(
             "The 1st team defined in YAML tag has property `total-dev`",
