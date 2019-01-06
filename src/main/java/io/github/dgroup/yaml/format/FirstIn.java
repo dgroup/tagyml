@@ -24,61 +24,73 @@
 package io.github.dgroup.yaml.format;
 
 import io.github.dgroup.yaml.YamlFormatException;
+import org.cactoos.Proc;
 import org.cactoos.Scalar;
 import org.cactoos.Text;
+import org.cactoos.func.UncheckedProc;
 import org.cactoos.iterable.IterableOf;
 
 /**
- * Retrieve the first scalars value, skipping scalars which throw the
- *  exception(s).
+ * Retrieve the first successfully parsed object in accordance with the format,
+ * skipping formats which throw the exception(s).
  *
- * @param <T> The type of scalar.
+ * @param <T> The type of object parsed by particular YAML format.
  * @since 0.1.0
  */
 public final class FirstIn<T> implements Scalar<T> {
 
     /**
-     * The error message in case of illegal YAML format.
+     * The YAML parsing procedure based on supported formats.
      */
-    private final Text error;
-
-    /**
-     * The supported formats.
-     */
-    private final Iterable<Scalar<T>> formats;
+    private final Scalar<T> origin;
 
     /**
      * Ctor.
-     * @param formats The formats to be applied to YAML file in order to parse.
+     * @param fbk The procedure to handle the exceptions within the
+     *  {@link Scalar#value()}.
+     * @param err The exception message in case if there are no any scalars
+     *  which able to parse the target YAML file.
+     * @param fts The formats to be applied to YAML file in order to parse.
      */
     @SafeVarargs
-    public FirstIn(final Scalar<T>... formats) {
-        this(() -> "The file has unsupported YAML format", formats);
+    public FirstIn(
+        final Proc<Exception> fbk, final Text err, final Scalar<T>... fts
+    ) {
+        this(fbk, err, new IterableOf<>(fts));
     }
 
     /**
      * Ctor.
-     * @param formats The formats to be applied to YAML file in order to parse.
-     * @param error The exception message in case if there are no any scalars
+     * @param fbk The procedure to handle the exceptions within the
+     *  {@link Scalar#value()}.
+     * @param err The exception message in case if there are no any scalars
      *  which able to parse the target YAML file.
-     * @checkstyle IllegalCatchCheck (15 lines)
+     * @param fts The formats to be applied to YAML file in order to parse.
+     * @checkstyle IllegalCatchCheck (100 lines)
      */
-    @SafeVarargs
-    public FirstIn(final Text error, final Scalar<T>... formats) {
-        this.formats = new IterableOf<>(formats);
-        this.error = error;
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    public FirstIn(
+        final Proc<Exception> fbk, final Text err, final Iterable<Scalar<T>> fts
+    ) {
+        this.origin = () -> {
+            for (final Scalar<T> format : fts) {
+                try {
+                    return format.value();
+                } catch (final Exception exp) {
+                    new UncheckedProc<>(fbk).exec(exp);
+                }
+            }
+            throw new YamlFormatException(err);
+        };
     }
 
     @Override
-    @SuppressWarnings({
-        "PMD.EmptyCatchBlock", "PMD.AvoidCatchingGenericException"})
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public T value() throws YamlFormatException {
-        for (final Scalar<T> format : this.formats) {
-            try {
-                return format.value();
-            } catch (final Exception exp) {
-            }
+        try {
+            return this.origin.value();
+        } catch (final Exception cause) {
+            throw new YamlFormatException(cause);
         }
-        throw new YamlFormatException(this.error);
     }
 }
