@@ -62,7 +62,6 @@
     <license.url>
       https://github.com/dgroup/tagyml/blob/master/license.txt
     </license.url>
-    <GAV>${project.groupId}:${project.artifactId}:${project.version}</GAV>
     <!-- System, mvn plugins, etc -->
     <jdk.version>1.8</jdk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -161,24 +160,6 @@
                   <directory>src/main/resources</directory>
                 </resource>
               </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>properties-maven-plugin</artifactId>
-        <version>${mvn.properties.version}</version>
-        <executions>
-          <execution>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>write-project-properties</goal>
-            </goals>
-            <configuration>
-              <outputFile>
-                ${project.build.outputDirectory}/${project.artifactId}-${project.version}-build.properties
-              </outputFile>
             </configuration>
           </execution>
         </executions>
