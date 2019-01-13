@@ -67,20 +67,20 @@ public final class FirstInTest {
                 (version, exception) -> {
                 },
                 () -> "Ok",
-                new FormatOf<>(
+                new Fake<>(
                     "1.0",
                     () -> {
                         throw new YamlFormatException("1");
                     }
                 ),
-                new FormatOf<>(
+                new Fake<>(
                     "2.0",
                     () -> {
                         throw new YamlFormatException("2");
                     }
                 ),
-                new FormatOf<>("3.0", () -> 3),
-                new FormatOf<>("4.0", () -> 4)
+                new Fake<>("3.0", () -> 3),
+                new Fake<>("4.0", () -> 4)
             ),
             new ScalarHasValue<>(3)
         );
@@ -102,13 +102,13 @@ public final class FirstInTest {
             (version, exception) -> {
             },
             new TextOf("The file has unsupported YAML format"),
-            new FormatOf<>(
+            new Fake<>(
                 "1.0",
                 () -> {
                     throw new IllegalArgumentException("Can't parse version 1");
                 }
             ),
-            new FormatOf<>(
+            new Fake<>(
                 "2.0",
                 () -> {
                     throw new IllegalArgumentException("Can't parse version 2");
@@ -132,7 +132,7 @@ public final class FirstInTest {
                     )
                 ),
                 () -> "The YAML file 'abc.yml' has unsupported format",
-                new FormatOf<>(
+                new Fake<>(
                     "1.0",
                     () -> {
                         throw new IllegalArgumentException("NPE");

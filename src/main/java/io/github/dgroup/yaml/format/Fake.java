@@ -28,13 +28,12 @@ import io.github.dgroup.yaml.YamlFormatException;
 import org.cactoos.Scalar;
 
 /**
- * YAML file format.
+ * The fake instance of {@link Format} for unit testing purposes.
+ * @param <T> The type of value which was parsed using current format.
  *
- * @param <T> The type of object to be built from YAML file.
- * @since 0.2.0
+ * @since 0.3.0
  */
-public final class FormatOf<T> implements Format<T> {
-
+public final class Fake<T> implements Format<T> {
     /**
      * The version of current YAML format.
      */
@@ -50,7 +49,7 @@ public final class FormatOf<T> implements Format<T> {
      * @param vrsn The version of current YAML format.
      * @param frmt The object to be built from YAML file.
      */
-    public FormatOf(final String vrsn, final Scalar<T> frmt) {
+    public Fake(final String vrsn, final Scalar<T> frmt) {
         this.vrsn = vrsn;
         this.frmt = frmt;
     }

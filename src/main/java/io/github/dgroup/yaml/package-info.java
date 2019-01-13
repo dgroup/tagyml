@@ -26,5 +26,9 @@
  * Package dedicated for work with yml tags.
  *
  * @since 0.1.0
+ * @todo #/DEV Avoid compound names within the classes. The fix is required for
+ *  the following packages:
+ *  - {@link io.github.dgroup.yaml.file}
+ *  - {@link io.github.dgroup.yaml.tag}, where TagIs rename to TagHas
  */
 package io.github.dgroup.yaml;
