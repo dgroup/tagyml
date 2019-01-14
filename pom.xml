@@ -95,7 +95,6 @@
     <code.cvrg.line>0.40</code.cvrg.line>
     <sonar.coverage.exclusions>
       **/*Exception.java,
-      **/*Envelope.java,
       **/*Fake*.java,**/*.Fake*.java,**/**.Fake*.java,
     </sonar.coverage.exclusions>
   </properties>

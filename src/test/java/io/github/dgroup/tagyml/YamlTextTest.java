@@ -26,6 +26,7 @@ package io.github.dgroup.tagyml;
 import io.github.dgroup.tagyml.text.YamlText;
 import java.nio.file.Paths;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.StringContains;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -63,6 +64,16 @@ public final class YamlTextTest {
         new YamlText(
             Paths.get("src", "test", "teams.yaml")
         ).asString();
+    }
+
+    @Test
+    public void tostring() {
+        MatcherAssert.assertThat(
+            new YamlText(
+                Paths.get("src", "test", "resources", "yaml", "text.yaml")
+            ).toString(),
+            new StringContains("version: 1.0")
+        );
     }
 
 }

@@ -24,38 +24,37 @@
 package io.github.dgroup.tagyml.yaml;
 
 import io.github.dgroup.tagyml.UncheckedYamlFormatException;
-import io.github.dgroup.tagyml.Yaml;
-import io.github.dgroup.tagyml.YamlFormatException;
-import org.cactoos.Text;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
- * The {@link Yaml} which doesn't throw checked {@link YamlFormatException}.
+ * Test case for {@link Unchecked}.
  *
- * @param <T> The type of the target object.
- * @see UncheckedYamlFormatException
- * @since 0.1.0
+ * @since 0.3.0
+ * @checkstyle JavadocMethodCheck (500 lines)
  */
-public final class Unchecked<T> implements Yaml<T> {
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+public final class UncheckedTest {
 
     /**
-     * The origin.
+     * The junit rule to handle the exception thrown within the unit tests.
      */
-    private final Yaml<T> origin;
+    @Rule
+    public ExpectedException cause = ExpectedException.none();
 
-    /**
-     * Ctor.
-     * @param origin The origin.
-     */
-    public Unchecked(final Yaml<T> origin) {
-        this.origin = origin;
-    }
-
-    @Override
-    public T apply(final Text text) {
-        try {
-            return this.origin.apply(text);
-        } catch (final YamlFormatException cause) {
-            throw new UncheckedYamlFormatException(cause);
-        }
+    @Test
+    public void value() {
+        this.cause.expect(UncheckedYamlFormatException.class);
+        this.cause.expectMessage(
+            "java.lang.IllegalArgumentException: no args"
+        );
+        new Unchecked<>(
+            new Snakeyaml<>(Object.class)
+        ).apply(
+            () -> {
+                throw new IllegalArgumentException("no args");
+            }
+        );
     }
 }

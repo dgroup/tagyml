@@ -23,8 +23,8 @@
  */
 package io.github.dgroup.tagyml;
 
-import io.github.dgroup.tagyml.text.YamlText;
 import org.cactoos.Func;
+import org.cactoos.Text;
 
 /**
  * Represents YAML file as an object.
@@ -32,7 +32,7 @@ import org.cactoos.Func;
  * @param <T> The type of the target object.
  * @since 0.3.0
  */
-public interface Yaml<T> extends Func<YamlText, T> {
+public interface Yaml<T> extends Func<Text, T> {
 
     /**
      * Evaluate the YAML text as object.
@@ -41,5 +41,5 @@ public interface Yaml<T> extends Func<YamlText, T> {
      * @throws YamlFormatException In case if YAML file can't be read or the
      *  file has unsupported version/format.
      */
-    T apply(YamlText text) throws YamlFormatException;
+    T apply(Text text) throws YamlFormatException;
 }
