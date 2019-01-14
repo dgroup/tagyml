@@ -23,8 +23,11 @@
  */
 package io.github.dgroup.tagyml.tag;
 
+import io.github.dgroup.tagyml.YamlFormatException;
 import org.hamcrest.MatcherAssert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test case for {@link TagOf}.
@@ -35,6 +38,12 @@ import org.junit.Test;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class TagOfTest {
 
+    /**
+     * The junit rule to handle the exception thrown within the unit tests.
+     */
+    @Rule
+    public ExpectedException cause = ExpectedException.none();
+
     @Test
     public void value() {
         MatcherAssert.assertThat(
@@ -42,4 +51,14 @@ public final class TagOfTest {
             new TagHas<>("email", "user@mail.com")
         );
     }
+
+    @Test
+    public void tagValueIsBlank() throws YamlFormatException {
+        this.cause.expect(YamlFormatException.class);
+        this.cause.expectMessage(
+            "The tag `user` is missing or has incorrect structure"
+        );
+        new TagOf<>("user", "").value();
+    }
+
 }

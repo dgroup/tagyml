@@ -25,8 +25,8 @@ package io.github.dgroup.tagyml.yaml;
 
 import io.github.dgroup.tagyml.Yaml;
 import io.github.dgroup.tagyml.YamlFormatException;
-import io.github.dgroup.tagyml.text.YamlText;
 import org.cactoos.Func;
+import org.cactoos.Text;
 
 /**
  * The envelope for {@link Yaml}.
@@ -39,19 +39,19 @@ public class Envelope<T> implements Yaml<T> {
     /**
      * The function to evaluate the target object from YAML text.
      */
-    private final Func<YamlText, T> origin;
+    private final Func<Text, T> origin;
 
     /**
      * Ctor.
      * @param fnc The function to evaluate the target object from YAML text.
      */
-    public Envelope(final Func<YamlText, T> fnc) {
+    public Envelope(final Func<Text, T> fnc) {
         this.origin = fnc;
     }
 
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public final T apply(final YamlText text) throws YamlFormatException {
+    public final T apply(final Text text) throws YamlFormatException {
         try {
             return this.origin.apply(text);
             // @checkstyle IllegalCatchCheck (5 lines)
