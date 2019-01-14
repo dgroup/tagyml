@@ -35,7 +35,7 @@ import org.cactoos.scalar.UncheckedScalar;
  * @param <T> The type of item.
  * @since 0.1.0
  */
-public class TgEnvelope<T> implements Tag<T> {
+public class Envelope<T> implements Tag<T> {
 
     /**
      * YML tag name.
@@ -52,7 +52,7 @@ public class TgEnvelope<T> implements Tag<T> {
      * @param tag Current YML tag name.
      * @param yml Object tree loaded from *.yml file with tests.
      */
-    public TgEnvelope(final String tag, final Scalar<T> yml) {
+    public Envelope(final String tag, final Scalar<T> yml) {
         this.tag = tag;
         this.yml = yml;
     }

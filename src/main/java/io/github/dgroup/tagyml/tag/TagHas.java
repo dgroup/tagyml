@@ -33,7 +33,7 @@ import org.hamcrest.TypeSafeMatcher;
  * @param <T> The type of tag.
  * @since 0.1.0
  */
-public final class TagIs<T> extends TypeSafeMatcher<Tag<T>> {
+public final class TagHas<T> extends TypeSafeMatcher<Tag<T>> {
 
     /**
      * The name of YML tag.
@@ -50,7 +50,7 @@ public final class TagIs<T> extends TypeSafeMatcher<Tag<T>> {
      * @param name The name of YML tag.
      * @param value The value of YML tag.
      */
-    public TagIs(final String name, final T value) {
+    public TagHas(final String name, final T value) {
         super();
         this.name = name;
         this.value = value;
@@ -64,14 +64,14 @@ public final class TagIs<T> extends TypeSafeMatcher<Tag<T>> {
     @Override
     protected boolean matchesSafely(final Tag<T> tag) {
         return this.name.equals(tag.name())
-            && this.value.equals(new TgUnchecked<>(tag).value());
+            && this.value.equals(new Unchecked<>(tag).value());
     }
 
     @Override
     protected void describeMismatchSafely(
         final Tag<T> tag, final Description desc
     ) {
-        describe(desc, tag.name(), new TgUnchecked<>(tag).value());
+        describe(desc, tag.name(), new Unchecked<>(tag).value());
     }
 
     /**

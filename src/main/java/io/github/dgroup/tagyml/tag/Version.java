@@ -23,33 +23,36 @@
  */
 package io.github.dgroup.tagyml.tag;
 
-import org.hamcrest.MatcherAssert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.cactoos.Scalar;
 
 /**
- * Test case for {@link TagIs}.
+ * The <em>version</em> tag.
  *
  * @since 0.1.0
- * @checkstyle MagicNumberCheck (500 lines)
- * @checkstyle JavadocMethodCheck (500 lines)
- * @checkstyle JavadocVariableCheck (500 lines)
  */
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public final class TagIsTest {
+public final class Version extends Envelope<Double> {
 
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
+    /**
+     * Ctor.
+     * @param version The YML file version.
+     */
+    public Version(final String version) {
+        this(() -> Double.parseDouble(version));
+    }
 
-    @Test
-    public void matchesMismatch() {
-        this.exception.expect(AssertionError.class);
-        this.exception.expectMessage("Expected: Tag \"age\" is <27>.");
-        this.exception.expectMessage("but: Tag \"age\" is <26>.");
-        MatcherAssert.assertThat(
-            new TgFake<>("age", 26),
-            new TagIs<>("age", 27)
-        );
+    /**
+     * Ctor.
+     * @param version The YML file version.
+     */
+    public Version(final Double version) {
+        this(() -> version);
+    }
+
+    /**
+     * Ctor.
+     * @param version The YML file version.
+     */
+    public Version(final Scalar<Double> version) {
+        super("version", version);
     }
 }

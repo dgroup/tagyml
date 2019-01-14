@@ -23,43 +23,33 @@
  */
 package io.github.dgroup.tagyml.tag;
 
-import io.github.dgroup.tagyml.Tag;
+import org.hamcrest.MatcherAssert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
- * Fake implementation of {@link Tag} for unit testing purposes.
+ * Test case for {@link TagHas}.
  *
- * @param <T> The type of tag.
  * @since 0.1.0
+ * @checkstyle MagicNumberCheck (500 lines)
+ * @checkstyle JavadocMethodCheck (500 lines)
+ * @checkstyle JavadocVariableCheck (500 lines)
  */
-public final class TgFake<T> implements Tag<T> {
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+public final class TagHasTest {
 
-    /**
-     * The name of YML tag.
-     */
-    private final String tag;
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
 
-    /**
-     * The value of YML tag.
-     */
-    private final T val;
-
-    /**
-     * Ctor.
-     * @param tag The name of YML tag.
-     * @param val The value of YML tag.
-     */
-    public TgFake(final String tag, final T val) {
-        this.tag = tag;
-        this.val = val;
-    }
-
-    @Override
-    public String name() {
-        return this.tag;
-    }
-
-    @Override
-    public T value() {
-        return this.val;
+    @Test
+    public void matchesMismatch() {
+        this.exception.expect(AssertionError.class);
+        this.exception.expectMessage("Expected: Tag \"age\" is <27>.");
+        this.exception.expectMessage("but: Tag \"age\" is <26>.");
+        MatcherAssert.assertThat(
+            new Fake<>("age", 26),
+            new TagHas<>("age", 27)
+        );
     }
 }

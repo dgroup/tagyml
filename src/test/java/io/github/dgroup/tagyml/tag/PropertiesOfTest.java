@@ -23,19 +23,33 @@
  */
 package io.github.dgroup.tagyml.tag;
 
+import io.github.dgroup.tagyml.YamlFormatException;
+import org.cactoos.map.MapEntry;
+import org.cactoos.map.MapOf;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.IsEqual;
+import org.junit.Test;
+
 /**
- * The <em>version</em> tag.
+ * Test case for {@link PropertiesOf}.
  *
  * @since 0.1.0
+ * @checkstyle JavadocMethodCheck (500 lines)
  */
-public final class TgVersion extends TgEnvelope<Double> {
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+public final class PropertiesOfTest {
 
-    /**
-     * Ctor.
-     * @param version The YML file version.
-     */
-    public TgVersion(final Double version) {
-        super("version", () -> version);
+    @Test
+    public void value() throws YamlFormatException {
+        MatcherAssert.assertThat(
+            new PropertiesOf(
+                "props",
+                new MapOf<>(
+                    new MapEntry<>("1", "a"),
+                    new MapEntry<>("2", "b")
+                )
+            ).value().getProperty("2"),
+            new IsEqual<>("b")
+        );
     }
-
 }

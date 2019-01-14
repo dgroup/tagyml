@@ -23,30 +23,43 @@
  */
 package io.github.dgroup.tagyml.tag;
 
-import io.github.dgroup.tagyml.YamlFormatException;
-import org.cactoos.map.MapEntry;
-import org.cactoos.map.MapOf;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.core.IsEqual;
-import org.junit.Test;
+import io.github.dgroup.tagyml.Tag;
 
 /**
- * Test case for {@link TgProperties}.
+ * Fake implementation of {@link Tag} for unit testing purposes.
  *
+ * @param <T> The type of tag.
  * @since 0.1.0
- * @checkstyle JavadocMethodCheck (500 lines)
  */
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public final class TgPropertiesTest {
+public final class Fake<T> implements Tag<T> {
 
-    @Test
-    public void value() throws YamlFormatException {
-        MatcherAssert.assertThat(
-            new TgProperties(
-                "props",
-                new MapOf<>(new MapEntry<>("1", "a"), new MapEntry<>("2", "b"))
-            ).value().getProperty("2"),
-            new IsEqual<>("b")
-        );
+    /**
+     * The name of YML tag.
+     */
+    private final String tag;
+
+    /**
+     * The value of YML tag.
+     */
+    private final T val;
+
+    /**
+     * Ctor.
+     * @param tag The name of YML tag.
+     * @param val The value of YML tag.
+     */
+    public Fake(final String tag, final T val) {
+        this.tag = tag;
+        this.val = val;
+    }
+
+    @Override
+    public String name() {
+        return this.tag;
+    }
+
+    @Override
+    public T value() {
+        return this.val;
     }
 }

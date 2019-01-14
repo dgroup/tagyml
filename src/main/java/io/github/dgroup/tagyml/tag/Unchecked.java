@@ -23,23 +23,42 @@
  */
 package io.github.dgroup.tagyml.tag;
 
-import java.util.Map;
-import java.util.Properties;
-import org.cactoos.scalar.PropertiesOf;
+import io.github.dgroup.tagyml.Tag;
+import io.github.dgroup.tagyml.UncheckedYamlFormatException;
+import io.github.dgroup.tagyml.YamlFormatException;
 
 /**
- * The <em>properties</em> tag.
+ * Tag that doesn't throw checked {@link YamlFormatException}.
  *
+ * @param <T> The type of tag.
  * @since 0.1.0
  */
-public final class TgProperties extends TgEnvelope<Properties> {
+public final class Unchecked<T> implements Tag<T> {
+
+    /**
+     * Origin.
+     */
+    private final Tag<T> tag;
+
     /**
      * Ctor.
-     * @param name The name of YML tag.
-     * @param tag The value of YML tag.
-     * @param <T> The type of properties.
+     * @param tag Origin.
      */
-    public <T> TgProperties(final String name, final Map<T, T> tag) {
-        super(name, new PropertiesOf(tag));
+    public Unchecked(final Tag<T> tag) {
+        this.tag = tag;
+    }
+
+    @Override
+    public String name() {
+        return this.tag.name();
+    }
+
+    @Override
+    public T value() {
+        try {
+            return this.tag.value();
+        } catch (final YamlFormatException cause) {
+            throw new UncheckedYamlFormatException(cause);
+        }
     }
 }

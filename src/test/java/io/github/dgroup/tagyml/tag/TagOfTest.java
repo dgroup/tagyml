@@ -39,7 +39,7 @@ public final class TagOfTest {
     public void value() {
         MatcherAssert.assertThat(
             new TagOf<>("email", "user@mail.com"),
-            new TagIs<>("email", "user@mail.com")
+            new TagHas<>("email", "user@mail.com")
         );
     }
 }
