@@ -35,10 +35,13 @@ dependencies {
     compile 'io.github.dgroup:tagyml:<version>'
 }
 ```
-The current project version is built on top of https://bitbucket.org/asomov/snakeyaml framework.
 
-### Get started
-**Example how to represents YAML file as an object `Teams`**
+### Get started 
+**Represents the YAML file as an object `Teams`**
+
+The examples below are built on top of [snakeyaml](https://bitbucket.org/asomov/snakeyaml) framework, but you can override it 
+by using the [extension point](/src/main/java/io/github/dgroup/tagyml/Yaml.java) in favour of your favourite framework.
+
  1. Define YAML [file](/src/test/resources/yaml/teams.yaml) for version `1.0`.
     ```yaml
     version: 1.0
@@ -80,12 +83,12 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
     |               |-- ...
     ...
     ```
- 2. Define interfaces for domain model
+ 2. Define the interfaces for the domain model
     ```java
     /** 
      * YAML file-based team.
      */
-    pulbic interface Team {
+    public interface Team {
         int id() throws YamlFormatException;
         String name() throws YamlFormatException;
         User lead() throws YamlFormatException;
@@ -100,16 +103,17 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         String email();
     }
     ```
-    See [UncheckedYamlFormatException](/io/github/dgroup/tagyml/UncheckedYamlFormatException.java) in case if you don't wan't to throw the checked exception during YAML file parsing procedure.
- 3. Define YAML parsing process based on YAML file version tag
+    See [UncheckedYamlFormatException](/src/main/java/io/github/dgroup/tagyml/UncheckedYamlFormatException.java) in case if you don't wan't to throw the checked exception during YAML file parsing procedure.
+
+ 3. Define the YAML parsing process
     ```java
     public class Teams implements Scalar<Iterable<Team>> {
 
         private static final Logger LOG = LoggerFactory.getLogger(Teams.class);
 
         /**
-         * @param path The path to YAML file with configuration.
-         * @param charset The YAML file charset to read.
+         * @param path The path to the YAML file.
+         * @param charset The charset of YAML file to read.
          */
         public Teams(final Path path, final Charset charset) {
             this.path = path;
@@ -122,7 +126,6 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
             return new FirstIn<>(
                 // Print to logs the details about failed attempt of
                 // parsing YAML file using a particular format.
-                // SLF4J has an ugly signature for 'warn' method.
                 (version, exception) -> LOG.warn(
                     new FormattedText(
                         "Unable to parse '%s' using '%s' format",
@@ -144,7 +147,8 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
         }
     }
     ```
-    See [FirstIn](/io/github/dgroup/tagyml/format/FirstIn.java).
+    See [FirstIn](/src/main/java/io/github/dgroup/tagyml/format/FirstIn.java).
+
  4. Define YAML format for version 1.0 - `TeamsV1`
     ```java
     final class TeamsV1 implements Format<Iterable<Team>> {
@@ -181,7 +185,7 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
             public List<YmlTeam> teams;
     
             public double tagVersion() throws YamlFormatException {
-                return new TgVersion(this.version).value();
+                return new Version(this.version).value();
             }
     
             public Iterable<Team> tagTeams() throws YamlFormatException {
@@ -219,7 +223,7 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
     
                     @Override
                     public Properties properties() throws YamlFormatException {
-                        return new TgProperties("properties", properties);
+                        return new PropertiesOf("properties", properties).value();
                     }
                 };
             }
@@ -236,26 +240,29 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
                 return new User() {
                     @Override
                     public String name() {
-                        return new TgUnchecked(new TagOf<>("name", name)).value();
+                        return new Unchecked(new TagOf<>("name", name)).value();
                     }
 
                     @Override
                     public String email() {
-                        return new TgUnchecked(new TagOf<>("email", email)).value();
+                        return new Unchecked(new TagOf<>("email", email)).value();
                     }
                 );
             }
         }
-    
     }
     ```
     See [Format](src/main/java/io/github/dgroup/tagyml/Format.java), 
     [Snakeyaml](src/main/java/io/github/dgroup/tagyml/yaml/Snakeyaml.java), 
-    [TgVersion](src/main/java/io/github/dgroup/tagyml/tag/TgVersion.java), 
+    [Version](src/main/java/io/github/dgroup/tagyml/tag/Version.java), 
+    [PropertiesOf](src/main/java/io/github/dgroup/tagyml/tag/PropertiesOf.java), 
     [TagOf](src/main/java/io/github/dgroup/tagyml/tag/TagOf.java) and 
-    [TgUnchecked](src/main/java/io/github/dgroup/tagyml/tag/TgUnchecked.java).
+    [Unchecked](src/main/java/io/github/dgroup/tagyml/tag/Unchecked.java).
     
-    Instead of [Snakeyaml](src/main/java/io/github/dgroup/tagyml/yaml/Snakeyaml.java) you may implement [Yaml](/src/main/java/io/github/dgroup/tagyml/Yaml.java) using your favourite framework in the same way. 
+    Instead of [Snakeyaml](src/main/java/io/github/dgroup/tagyml/yaml/Snakeyaml.java) 
+    you may implement [Yaml](/src/main/java/io/github/dgroup/tagyml/Yaml.java) 
+    using your favourite framework in the same way.
+ 
  5. Parse YAML file in [EO](http://www.elegantobjects.org/#principles) way
     ```java
     @Test
@@ -280,6 +287,6 @@ The current project version is built on top of https://bitbucket.org/asomov/snak
     }
     ```
     See [SnakeyamlTest](/src/test/java/io/github/dgroup/tagyml/yaml/SnakeyamlTest.java)
-     for details. Of course, the test above is testing a lot of things and should  
-     be separated into more tests with single `MatcherAssert.assertThat` each, 
-     but here it was done for educational purposes.
+    for details. Of course, the test above is testing a lot of things and should 
+    be separated into bunch of tests with single `MatcherAssert.assertThat` each,
+    but here it was done for educational purposes.
