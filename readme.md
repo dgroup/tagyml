@@ -15,7 +15,7 @@
 [![Qulice](https://img.shields.io/badge/qulice-passed-blue.svg)](http://www.qulice.com/)
 [![SQ maintainability](https://sonarcloud.io/api/project_badges/measure?project=io.github.dgroup%3Atagyml&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=io.github.dgroup%3Atagyml)
 [![Codebeat](https://codebeat.co/badges/f61cb4a4-660f-4149-bbc6-8b66fec90941)](https://codebeat.co/projects/github-com-dgroup-tagyml-master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/011685357fc44898a8538d3e51d8da70)](https://www.codacy.com/app/dgroup/tagyml?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dgroup/tagyml&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b7e76567bb99484a9bff9d2ff1ff4be3)](https://www.codacy.com/app/dgroup/tagyml?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dgroup/tagyml&amp;utm_campaign=Badge_Grade)
 [![Codecov](https://codecov.io/gh/dgroup/tagyml/branch/master/graph/badge.svg?token=Pqdeao3teI)](https://codecov.io/gh/dgroup/tagyml)
 
 **ATTENTION**: We're still in a very early alpha version, the API
