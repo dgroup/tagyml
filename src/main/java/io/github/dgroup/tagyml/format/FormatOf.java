@@ -28,12 +28,12 @@ import io.github.dgroup.tagyml.YamlFormatException;
 import org.cactoos.Scalar;
 
 /**
- * Envelope of {@link Format}.
+ * The {@link Format} of YAML file.
  *
  * @param <T> The type of object to be built from YAML file.
  * @since 0.3.0
  */
-public class Envelope<T> implements Format<T> {
+public class FormatOf<T> implements Format<T> {
 
     /**
      * The version of current YAML format.
@@ -50,7 +50,7 @@ public class Envelope<T> implements Format<T> {
      * @param vrsn The version of current YAML format.
      * @param obj The object to be built from YAML file.
      */
-    public Envelope(final String vrsn, final Scalar<T> obj) {
+    public FormatOf(final String vrsn, final Scalar<T> obj) {
         this.vrsn = vrsn;
         this.obj = obj;
     }

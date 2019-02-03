@@ -34,7 +34,7 @@ import org.cactoos.Text;
  * @param <T> The type of the target object.
  * @since 0.3.0
  */
-public class Envelope<T> implements Yaml<T> {
+public class YamlEnvelope<T> implements Yaml<T> {
 
     /**
      * The function to evaluate the target object from YAML text.
@@ -45,7 +45,7 @@ public class Envelope<T> implements Yaml<T> {
      * Ctor.
      * @param fnc The function to evaluate the target object from YAML text.
      */
-    public Envelope(final Func<Text, T> fnc) {
+    public YamlEnvelope(final Func<Text, T> fnc) {
         this.origin = fnc;
     }
 

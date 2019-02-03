@@ -30,7 +30,7 @@ package io.github.dgroup.tagyml.tag;
  * @param <T> The type of tag.
  * @since 0.1.0
  */
-public class TagOf<T> extends Envelope<T> {
+public class TagOf<T> extends TagEnvelope<T> {
 
     /**
      * Ctor.

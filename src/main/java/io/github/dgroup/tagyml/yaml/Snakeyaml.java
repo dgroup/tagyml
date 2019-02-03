@@ -32,7 +32,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
  * @param <T> The type of the target object.
  * @since 0.1.0
  */
-public final class Snakeyaml<T> extends Envelope<T> {
+public final class Snakeyaml<T> extends YamlEnvelope<T> {
 
     /**
      * Ctor.

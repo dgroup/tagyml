@@ -31,7 +31,7 @@ import java.util.Properties;
  *
  * @since 0.1.0
  */
-public final class PropertiesOf extends Envelope<Properties> {
+public final class PropertiesOf extends TagEnvelope<Properties> {
     /**
      * Ctor.
      * @param name The name of YML tag.

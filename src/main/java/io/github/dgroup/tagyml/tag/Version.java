@@ -30,7 +30,7 @@ import org.cactoos.Scalar;
  *
  * @since 0.1.0
  */
-public final class Version extends Envelope<Double> {
+public final class Version extends TagEnvelope<Double> {
 
     /**
      * Ctor.
