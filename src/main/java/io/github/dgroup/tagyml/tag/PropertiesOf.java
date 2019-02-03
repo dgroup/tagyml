@@ -23,6 +23,7 @@
  */
 package io.github.dgroup.tagyml.tag;
 
+import io.github.dgroup.tagyml.YamlFormatException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -39,6 +40,14 @@ public final class PropertiesOf extends TagEnvelope<Properties> {
      * @param <T> The type of properties.
      */
     public <T> PropertiesOf(final String name, final Map<T, T> tag) {
-        super(name, new org.cactoos.scalar.PropertiesOf(tag));
+        super(
+            name,
+            () -> {
+                if (tag == null) {
+                    throw new YamlFormatException("Tag '%s' is absent", name);
+                }
+                return new org.cactoos.scalar.PropertiesOf(tag).value();
+            }
+        );
     }
 }
