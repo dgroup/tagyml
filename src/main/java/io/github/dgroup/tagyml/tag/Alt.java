@@ -21,77 +21,67 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package io.github.dgroup.tagyml.tag;
 
 import io.github.dgroup.tagyml.Tag;
 import io.github.dgroup.tagyml.YamlFormatException;
-import java.io.UncheckedIOException;
 import org.cactoos.Scalar;
 
 /**
- * Envelope of {@link Tag}.
+ * The tag with alternative value in case if original is absent.
  *
- * @param <T> The type of item.
- * @since 0.1.0
+ * @param <T> The type of tag.
+ * @since 0.4.0
  */
-public class TagEnvelope<T> implements Tag<T> {
-
-    /**
-     * The origin.
-     */
-    private final Tag<T> origin;
+public class Alt<T> extends TagEnvelope<T> {
 
     /**
      * Ctor.
-     * @param tag Current YML tag name.
-     * @param yml Object tree loaded from *.yml file with tests.
+     * @param src The original tag.
+     * @param alt The alternative value of tag.
      */
-    public TagEnvelope(final String tag, final Scalar<T> yml) {
-        this(
+    public Alt(final Tag<T> src, final T alt) {
+        this(src, () -> alt);
+    }
+
+    /**
+     * Ctor.
+     * @param src The original tag.
+     * @param alt The alternative value of tag.
+     */
+    public Alt(final Tag<T> src, final Scalar<T> alt) {
+        super(
+            // @checkstyle AnonInnerLengthCheck (30 lines)
             new Tag<T>() {
+
                 @Override
                 public String name() {
-                    return tag;
+                    return src.name();
                 }
 
                 @Override
-                @SuppressWarnings("PMD.AvoidCatchingGenericException")
+                @SuppressWarnings({
+                    "PMD.PreserveStackTrace",
+                    "PMD.AvoidCatchingGenericException"})
                 public T value() throws YamlFormatException {
+                    T val;
                     try {
-                        return yml.value();
-                        // @checkstyle IllegalCatchCheck (3 lines)
-                    } catch (final Exception cause) {
-                        throw new YamlFormatException(cause);
+                        val = src.value();
+                        // @checkstyle IllegalCatchCheck (10 lines)
+                    } catch (final Exception expected) {
+                        try {
+                            val = alt.value();
+                        } catch (final Exception unexpected) {
+                            throw new YamlFormatException(
+                                "Not able to evaluate the alternative value",
+                                unexpected
+                            );
+                        }
                     }
+                    return val;
                 }
             }
         );
-    }
-
-    /**
-     * Ctor.
-     * @param origin The original tag.
-     */
-    public TagEnvelope(final Tag<T> origin) {
-        this.origin = origin;
-    }
-
-    @Override
-    public final String name() {
-        return this.origin.name();
-    }
-
-    @Override
-    public final T value() throws YamlFormatException {
-        try {
-            final T val = this.origin.value();
-            if (val == null
-                || val.toString().chars().allMatch(Character::isWhitespace)) {
-                throw new YamlFormatException(this);
-            }
-            return val;
-        } catch (final UncheckedIOException cause) {
-            throw new YamlFormatException(cause);
-        }
     }
 }

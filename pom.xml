@@ -85,7 +85,7 @@
     <!-- Unit testing dependencies -->
     <hamcrest-all.version>1.3</hamcrest-all.version>
     <junit.version>4.12</junit.version>
-    <cactoos-matchers.version>0.12</cactoos-matchers.version>
+    <cactoos-matchers.version>0.13</cactoos-matchers.version>
     <!-- Code quality -->
     <code.cvrg.classes-without-tests>5</code.cvrg.classes-without-tests>
     <code.cvrg.instructions>0.40</code.cvrg.instructions>

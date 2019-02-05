@@ -21,34 +21,35 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package io.github.dgroup.tagyml.tag;
 
-import org.cactoos.Scalar;
+import org.junit.Test;
+import org.llorllale.cactoos.matchers.Assertion;
 
 /**
- * Represents a tag from *.yml file.
+ * Test case for {@link Alt}.
  *
- * @param <T> The type of tag.
- * @since 0.1.0
+ * @since 0.4.0
+ * @checkstyle MagicNumberCheck (500 lines)
+ * @checkstyle JavadocMethodCheck (500 lines)
  */
-public class TagOf<T> extends TagEnvelope<T> {
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+public final class AltTest {
 
-    /**
-     * Ctor.
-     * @param name The name of YML tag.
-     * @param tag The value of YML tag.
-     */
-    public TagOf(final String name, final T tag) {
-        this(name, () -> tag);
-    }
-
-    /**
-     * Ctor.
-     * @param name The name of YML tag.
-     * @param tag The value of YML tag.
-     */
-    public TagOf(final String name, final Scalar<T> tag) {
-        super(name, tag);
+    @Test
+    public void value() {
+        new Assertion<>(
+            "The alternative value is used",
+            () -> new Alt<>(
+                new Fake<>(
+                    "--threads",
+                    () -> {
+                        throw new IllegalArgumentException("-t");
+                    }
+                ),
+                5
+            ),
+            new TagHas<>("--threads", 5)
+        ).affirm();
     }
 }
