@@ -24,6 +24,8 @@
 package io.github.dgroup.tagyml.tag;
 
 import io.github.dgroup.tagyml.Tag;
+import org.cactoos.Scalar;
+import org.cactoos.scalar.UncheckedScalar;
 
 /**
  * Fake implementation of {@link Tag} for unit testing purposes.
@@ -41,7 +43,7 @@ public final class Fake<T> implements Tag<T> {
     /**
      * The value of YML tag.
      */
-    private final T val;
+    private final Scalar<T> val;
 
     /**
      * Ctor.
@@ -49,6 +51,15 @@ public final class Fake<T> implements Tag<T> {
      * @param val The value of YML tag.
      */
     public Fake(final String tag, final T val) {
+        this(tag, () -> val);
+    }
+
+    /**
+     * Ctor.
+     * @param tag The name of YML tag.
+     * @param val The value of YML tag.
+     */
+    public Fake(final String tag, final Scalar<T> val) {
         this.tag = tag;
         this.val = val;
     }
@@ -60,6 +71,6 @@ public final class Fake<T> implements Tag<T> {
 
     @Override
     public T value() {
-        return this.val;
+        return new UncheckedScalar<>(this.val).value();
     }
 }
