@@ -23,13 +23,15 @@
  */
 package io.github.dgroup.tagyml;
 
+import org.cactoos.Scalar;
+
 /**
  * Named yaml tag with the value within the *.yml file.
  *
  * @param <T> Type of tag.
  * @since 0.1.0
  */
-public interface Tag<T> {
+public interface Tag<T> extends Scalar<T> {
 
     /**
      * Represent tag name as string.
@@ -38,7 +40,7 @@ public interface Tag<T> {
     String name();
 
     /**
-     * Represent tag value as string.
+     * Represent tag value.
      * @return Value.
      * @throws YamlFormatException in case if tag is null/missing
      *  or has no value.
