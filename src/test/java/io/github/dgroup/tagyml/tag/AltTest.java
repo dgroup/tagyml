@@ -40,7 +40,7 @@ public final class AltTest {
     public void value() {
         new Assertion<>(
             "The alternative value is used",
-            () -> new Alt<>(
+            new Alt<>(
                 new Fake<>(
                     "--threads",
                     () -> {

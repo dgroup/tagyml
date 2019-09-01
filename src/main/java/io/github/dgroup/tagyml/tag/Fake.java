@@ -25,7 +25,7 @@ package io.github.dgroup.tagyml.tag;
 
 import io.github.dgroup.tagyml.Tag;
 import org.cactoos.Scalar;
-import org.cactoos.scalar.UncheckedScalar;
+import org.cactoos.scalar.Unchecked;
 
 /**
  * Fake implementation of {@link Tag} for unit testing purposes.
@@ -71,6 +71,6 @@ public final class Fake<T> implements Tag<T> {
 
     @Override
     public T value() {
-        return new UncheckedScalar<>(this.val).value();
+        return new Unchecked<>(this.val).value();
     }
 }
