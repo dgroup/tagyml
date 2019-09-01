@@ -22,8 +22,29 @@ env:
 
 jdk:
   - openjdk8
-  - openjdk11
-  - openjdk-ea
+#  - openjdk11
+#  - openjdk-ea
+# @todo #/DEV Activate JDK11, 12 for CI process.addons:
+#  For now its disabled due to 'https://travis-ci.org/dgroup/tagyml/jobs/579535606'
+#  Exception in thread "main" java.lang.reflect.InvocationTargetException
+#  at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+#  at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+#  at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+#  at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+#  at java.instrument/sun.instrument.InstrumentationImpl.loadClassAndStartAgent(InstrumentationImpl.java:513)
+#  at java.instrument/sun.instrument.InstrumentationImpl.loadClassAndCallPremain(InstrumentationImpl.java:525)
+#  Caused by: java.lang.RuntimeException: Class java/util/UUID could not be instrumented.
+#  at org.jacoco.agent.rt.internal_8ff85ea.core.runtime.ModifiedSystemClassRuntime.createFor(ModifiedSystemClassRuntime.java:140)
+#  at org.jacoco.agent.rt.internal_8ff85ea.core.runtime.ModifiedSystemClassRuntime.createFor(ModifiedSystemClassRuntime.java:101)
+#  FATAL ERROR in native method: processing of -javaagent failed
+#  at org.jacoco.agent.rt.internal_8ff85ea.PreMain.createRuntime(PreMain.java:55)
+#  at org.jacoco.agent.rt.internal_8ff85ea.PreMain.premain(PreMain.java:47)
+#  ... 6 more
+#  Caused by: java.lang.NoSuchFieldException: $jacocoAccess
+#  at java.base/java.lang.Class.getField(Class.java:2000)
+#  at org.jacoco.agent.rt.internal_8ff85ea.core.runtime.ModifiedSystemClassRuntime.createFor(ModifiedSystemClassRuntime.java:138)
+#  ... 9 more
+#  Aborted (core dumped)
 
 after_success:
   - "bash <(curl -s https://codecov.io/bash)"
