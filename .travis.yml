@@ -21,7 +21,9 @@ env:
     - JAVA_OPTS="-Xmx256m"
 
 jdk:
-  - oraclejdk8
+  - openjdk8
+  - openjdk11
+  - openjdk-ea
 
 after_success:
   - "bash <(curl -s https://codecov.io/bash)"
