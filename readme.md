@@ -2,6 +2,7 @@
 [![Javadocs](http://www.javadoc.io/badge/io.github.dgroup/tagyml.svg)](http://www.javadoc.io/doc/io.github.dgroup/tagyml)
 [![License: MIT](https://img.shields.io/github/license/mashape/apistatus.svg)](./license.txt)
 [![Commit activity](https://img.shields.io/github/commit-activity/y/dgroup/tagyml.svg?style=flat-square)](https://github.com/dgroup/tagyml/graphs/commit-activity)
+[![Hits-of-Code](https://hitsofcode.com/github/dgroup/tagyml)](https://hitsofcode.com/view/github/dgroup/tagyml)
 
 [![Build Status](https://travis-ci.org/dgroup/tagyml.svg?branch=master&style=for-the-badge)](https://travis-ci.org/dgroup/tagyml)
 [![0pdd](http://www.0pdd.com/svg?name=dgroup/tagyml)](http://www.0pdd.com/p?name=dgroup/tagyml)
